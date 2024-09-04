@@ -26,20 +26,21 @@ def load_data(chunks: list, n: int, lang="français"):
     prompt = f"""
 {context}
 -----------------
-Proposes moi un quizz de {n} questions sur le contenu proposé plus haut.
-Pour chaque question donne les propositions et la bonne réponse en {lang}.
-Donnes moi juste le quizz dans ta réponse et le tout sous format JSON, pas
-dans un bloc, juste comme suit:
+Proposes moi un questionnaire vrai/faux de {n} questions sur le contenu
+proposé plus haut, en {lang}. Donne les réponses avec 0 pour faux et 1 pour
+vrai, et une explication de la bonne réponse. Donnes moi juste le quizz
+dans ta réponse et le tout sous format JSON, pas dans un bloc, juste comme
+suit:
 [
     {{
         "question": "...",
-        "options": ["...", "...", "..."],
+        "explanation": "...",
         "answer": 0
     }},
     {{
         "question": "...",
-        "options": ["...", "...", "..."],
-        "answer": 0
+        "explanation": "...",
+        "answer": 1
     }}
 ]
     """

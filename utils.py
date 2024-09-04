@@ -1,13 +1,13 @@
-from langchain_community.document_loaders import PyPDFLoader  # TextLoader
+from PyPDF2 import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 # read pdf file and return text
 def get_pdf_text(file):
     text = ""
-    pages = PyPDFLoader(file).load()
-    for page in pages:
-        text += page.page_content
+    pages_reader = PdfReader(file)
+    for page in pages_reader.pages:
+        text += page.extract_text()
     return text
 
 
