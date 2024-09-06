@@ -27,18 +27,19 @@ def load_data(chunks: list, n: int, lang="français"):
 {context}
 -----------------
 Proposes moi un questionnaire vrai/faux de {n} questions sur le contenu
-proposé plus haut, en {lang}. Donne les réponses avec 0 pour faux et 1 pour
+proposé plus haut, en {lang}. Donnes les réponses avec 0 pour faux et 1 pour
 vrai, et une explication de la bonne réponse. Donnes moi juste le quizz
-dans ta réponse et le tout sous format JSON, pas dans un bloc, juste comme
-suit:
+dans ta réponse et le tout sous format JSON, juste comme suit:
 [
     {{
         "question": "...",
+        "options": ["Vrai", "Faux"],
         "explanation": "...",
         "answer": 0
     }},
     {{
         "question": "...",
+        "options": ["Faux", "Vrai"],
         "explanation": "...",
         "answer": 1
     }}
@@ -59,6 +60,7 @@ def launch_quizz():
     ss = st.session_state
     if ss.count < len(ss.quizz_data):
         question = ss.quizz_data[ss.count]
+        # print(question)
 
         st.markdown(f"## Question {ss.count + 1}\n### {question['question']}")
 
@@ -70,13 +72,18 @@ def launch_quizz():
         if submitted and user_choice:
             # print(f"User choice: {user_choice}")
             # print(f"Correct answer: {question['options'][question['answer']]}")
-            if question['options'].index(user_choice) == question['answer']:
+            if (question['answer'] and user_choice[0] != "F") or (not question['answer'] and user_choice[0] == "F"):
                 st.success("Correct")
                 ss.correct += 1
             else:
                 st.error("Incorrect")
+            st.markdown("## :bulb:\n\n" + question["explanation"])
+            # st.write(question["explanation"])
 
-            txt = "Next Question" if ss.count != len(ss.quizz_data) - 1 else "Finish"
+            # Create a container and apply the centered-button class to it
+            st.write("")
+
+            txt = "Next Question →" if ss.count != len(ss.quizz_data) - 1 else "Finish"
             st.button(txt, on_click=next_question)
 
     else:
@@ -103,7 +110,7 @@ def main():
 
         number = st.number_input("Questions",
                                  min_value=5, max_value=20, step=5)
-        st.write("Quizz questions", number)
+        st.write("")
 
         lang = st.selectbox("Quizz Langage",
                             ["Français", "English"])

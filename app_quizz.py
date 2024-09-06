@@ -27,7 +27,7 @@ def load_data(chunks: list, n: int, lang="français"):
 {context}
 -----------------
 Proposes moi un quizz de {n} questions sur le contenu proposé plus haut.
-Pour chaque question donne les propositions et la bonne réponse en {lang}.
+Pour chaque question donnes les propositions et la bonne réponse en {lang}.
 Donnes moi juste le quizz dans ta réponse et le tout sous format JSON, pas
 dans un bloc, juste comme suit:
 [
@@ -88,13 +88,7 @@ def launch_quizz():
 def main():
     # Sidebar for uploading PDF files
     with st.sidebar:
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.header("Settings")
-
-        with col2:
-            st.button("🔄️", on_click=st.rerun)
+        st.header("Settings")
 
         files = st.file_uploader(
             "Upload your PDF Files and Click on the Process Button",
