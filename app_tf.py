@@ -46,7 +46,7 @@ dans ta réponse et le tout sous format JSON, juste comme suit:
 ]
     """
     response = model.generate_content(prompt)
-    # print(response.text)
+    print(response.text)
     if "json" in response.text[:10]:
         quizz_data = json.loads(response.text[7:-3])
     else:
@@ -78,7 +78,6 @@ def launch_quizz():
             else:
                 st.error("Incorrect")
             st.markdown("## :bulb:\n\n" + question["explanation"])
-            # st.write(question["explanation"])
 
             # Create a container and apply the centered-button class to it
             st.write("")
@@ -96,13 +95,7 @@ def launch_quizz():
 def main():
     # Sidebar for uploading PDF files
     with st.sidebar:
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.header("Settings")
-
-        with col2:
-            st.button("🔄️", on_click=st.rerun)
+        st.header("Settings")
 
         files = st.file_uploader(
             "Upload your PDF Files and Click on the Process Button",
@@ -114,6 +107,8 @@ def main():
 
         lang = st.selectbox("Quizz Langage",
                             ["Français", "English"])
+
+        st.write("")
 
         if st.button("✅Process"):
             initialize_state()

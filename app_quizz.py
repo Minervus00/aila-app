@@ -34,11 +34,13 @@ dans un bloc, juste comme suit:
     {{
         "question": "...",
         "options": ["...", "...", "..."],
+        "explanation": "...",
         "answer": 0
     }},
     {{
         "question": "...",
         "options": ["...", "...", "..."],
+        "explanation": "...",
         "answer": 0
     }}
 ]
@@ -75,7 +77,10 @@ def launch_quizz():
             else:
                 st.error("Incorrect")
 
-            txt = "Next Question" if ss.count != len(ss.quizz_data) - 1 else "Finish"
+            st.markdown("## :bulb:\n\n" + question["explanation"])
+            st.write("")
+
+            txt = "Next Question →" if ss.count != len(ss.quizz_data) - 1 else "Finish"
             st.button(txt, on_click=next_question)
 
     else:
@@ -96,10 +101,12 @@ def main():
 
         number = st.number_input("Questions",
                                  min_value=5, max_value=20, step=5)
-        st.write("Quizz questions", number)
+        st.write("")
 
         lang = st.selectbox("Quizz Langage",
                             ["Français", "English"])
+
+        st.write("")
 
         if st.button("✅Process"):
             initialize_state()
