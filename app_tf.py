@@ -8,6 +8,7 @@ import random
 
 
 def initialize_state():
+    st.session_state.response_error = False
     st.session_state.count = 0
     st.session_state.correct = 0
     if 'quizz_data' in st.session_state:
@@ -22,7 +23,7 @@ def next_question():
 
 
 def load_data(chunks: list, n: int, lang="français"):
-    context = "\n\n".join(random.sample(chunks, n))
+    context = "\n\n".join(random.sample(chunks, min(n, len(chunks))))
     prompt = f"""
 {context}
 -----------------
@@ -45,14 +46,17 @@ dans ta réponse et le tout sous format JSON, juste comme suit:
     }}
 ]
     """
-    response = model.generate_content(prompt)
-    print(response.text)
-    if "json" in response.text[:10]:
-        quizz_data = json.loads(response.text[7:-3])
-    else:
-        quizz_data = json.loads(response.text)
-    # print(quizz_data[0]['question'])
-    return quizz_data
+    try:
+        response = model.generate_content(prompt)
+        if "json" in response.text[:10]:
+            quizz_data = json.loads(response.text[7:-3])
+        else:
+            quizz_data = json.loads(response.text)
+        # print(quizz_data[0]['question'])
+        return quizz_data
+    except Exception:
+        st.session_state.response_error = True
+        return []
 
 
 def launch_quizz():
@@ -71,7 +75,7 @@ def launch_quizz():
 
         if submitted and user_choice:
             # print(f"User choice: {user_choice}")
-            # print(f"Correct answer: {question['options'][question['answer']]}")
+            # print(f"Corr answer: {question['options'][question['answer']]}")
             if (question['answer'] and user_choice[0] != "F") or (not question['answer'] and user_choice[0] == "F"):
                 st.success("Correct")
                 ss.correct += 1
@@ -88,6 +92,8 @@ def launch_quizz():
     else:
         st.markdown("## Quiz Completed!")
         st.markdown(f"### You answered correctly {ss.correct} out of {len(ss.quizz_data)} questions.")
+        if ss.correct/len(ss.quizz_data) > 0.7:
+            st.balloons()
 
     # print("---------------------------")
 
@@ -101,8 +107,8 @@ def main():
             "Upload your PDF Files and Click on the Process Button",
             accept_multiple_files=True)
 
-        number = st.number_input("Questions",
-                                 min_value=5, max_value=20, step=5)
+        nb_question = st.number_input("Questions", min_value=5,
+                                      max_value=20, step=5)
         st.write("")
 
         lang = st.selectbox("Quizz Langage",
@@ -122,17 +128,22 @@ def main():
                             file_chunks = get_text_chunks(text)
                             chunks.extend(file_chunks)
                     # load_data(chunks, number)
-                    quizz = load_data(chunks, number, lang)
-                    st.success("Done")
-                st.session_state.quizz_data = quizz
-                # launch_quizz()
+                    quizz = load_data(chunks, nb_question, lang)
+                if quizz:
+                    st.success("Done", icon="✅")
+                    st.session_state.quizz_data = quizz
+                else:
+                    st.error("Error", icon="🚨")
             else:
-                st.error("No document found")
+                st.error("No document found", icon="🚨")
 
     st.html('<h1 style="text-align: center; color: #6ca395;">PDF Quizz</h1>')
 
     if 'quizz_data' in st.session_state:
         launch_quizz()
+
+    if st.session_state.get('response_error'):
+        st.toast("An error occured, please retry !", icon="🚨")
 
 
 if __name__ == '__main__':

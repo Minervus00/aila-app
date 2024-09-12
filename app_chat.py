@@ -21,12 +21,11 @@ model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", client=genai,
 
 
 # read all pdf files and return text
-def get_pdf_text(pdf_docs):
+def get_pdf_text(pdf):
     text = ""
-    for pdf in pdf_docs:
-        pdf_reader = PdfReader(pdf)
-        for page in pdf_reader.pages:
-            text += page.extract_text()
+    pdf_reader = PdfReader(pdf)
+    for page in pdf_reader.pages:
+        text += page.extract_text()
     return text
 
 
@@ -82,7 +81,7 @@ def user_input(user_question):
 
     # Adjust context from chat history
     docs.extend([
-        Document(msg["content"]) for msg in st.session_state.messages
+        Document(msg["content"]) for msg in st.session_state.messages[-3:-1]
     ])
 
     response = chain.invoke(
@@ -106,9 +105,10 @@ def main():
             accept_multiple_files=True)
         if st.button("Submit & Process"):
             with st.spinner("Processing..."):
-                raw_text = get_pdf_text(pdf_docs)
-                text_chunks = get_text_chunks(raw_text)
-                get_vector_store(text_chunks)
+                for doc in pdf_docs:
+                    raw_text = get_pdf_text(doc)
+                    text_chunks = get_text_chunks(raw_text)
+                    get_vector_store(text_chunks)
                 st.success("Done")
 
     # Main content area for displaying chat messages
