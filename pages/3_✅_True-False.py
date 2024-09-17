@@ -16,13 +16,20 @@ def initialize_state():
     st.session_state.tf_state['response_error'] = False
     st.session_state.tf_state['count'] = 0
     st.session_state.tf_state['correct'] = 0
+    st.session_state.tf_state['disable_submit'] = False
 
 
 def next_question():
     ss = st.session_state.tf_state
     ss['count'] += 1
+    ss['disable_submit'] = False
     # print(f"Moving to next question. New count: {ss.count}")
     # st.experimental_rerun()
+
+
+def btn_disabled():
+    ss = st.session_state.tf_state
+    ss['disable_submit'] = True
 
 
 def load_data(chunks: list, n: int, lang="français"):
@@ -73,7 +80,10 @@ def launch_quizz():
         form = st.form(key=f"quiz_form_{ss['count']}")
         user_choice = form.radio("Choose an answer:",
                                  question['options'], index=None)
-        submitted = form.form_submit_button("Submit your answer")
+        submitted = form.form_submit_button("Submit your answer",
+                                            disabled=ss['disable_submit'],
+                                            on_click=btn_disabled
+                                            )
 
         if submitted and user_choice:
             # print(f"User choice: {user_choice}")
