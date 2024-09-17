@@ -8,16 +8,19 @@ import random
 
 
 def initialize_state():
-    st.session_state.response_error = False
-    st.session_state.count = 0
-    st.session_state.correct = 0
-    if 'quizz_data' in st.session_state:
-        del st.session_state['quizz_data']
+    if 'qz_state' in st.session_state:
+        del st.session_state.qz_state
+    else:
+        st.session_state.qz_state = {}
+
+    st.session_state.qz_state['response_error'] = False
+    st.session_state.qz_state['count'] = 0
+    st.session_state.qz_state['correct'] = 0
 
 
 def next_question():
-    ss = st.session_state
-    ss.count += 1
+    ss = st.session_state.qz_state
+    ss['count'] += 1
     # print(f"Moving to next question. New count: {ss.count}")
     # st.experimental_rerun()
 
@@ -55,43 +58,46 @@ dans un bloc, juste comme suit:
         # print(quizz_data[0]['question'])
         return quizz_data
     except Exception:
-        st.session_state.response_error = True
+        st.session_state.qz_state['response_error'] = True
         return []
 
 
 def launch_quizz():
     # print("\nquizz launched")
-    ss = st.session_state
-    if ss.count < len(ss.quizz_data):
-        question = ss.quizz_data[ss.count]
+    ss = st.session_state.qz_state
+    if ss['count'] < len(ss['quizz_data']):
+        question = ss['quizz_data'][ss['count']]
 
-        st.markdown(f"## Question {ss.count + 1}\n### {question['question']}")
+        st.markdown(f"## Question {ss['count'] + 1}\n### {question['question']}")
 
-        form = st.form(key=f"quiz_form_{ss.count}")
+        form = st.form(key=f"quiz_form_{ss['count']}")
         user_choice = form.radio("Choose an answer:",
                                  question['options'], index=None)
         submitted = form.form_submit_button("Submit your answer")
+        # TODO: Disable this button when clicked once
 
         if submitted and user_choice:
             # print(f"User choice: {user_choice}")
             # print(f"Corr answer: {question['options'][question['answer']]}")
             if question['options'].index(user_choice) == question['answer']:
                 st.success("Correct")
-                ss.correct += 1
+                ss['correct'] += 1
             else:
                 st.error("Incorrect")
 
-            st.markdown("## :bulb:\n\n" + question["explanation"])
+            # st.markdown("## :bulb:\n\n##### " + question["explanation"])
+            st.markdown("## :bulb:")
+            st.html(f"<span style='font-size: 1.3vw'>{question['explanation']}</span>")
             st.write("")
 
-            txt = "Next Question →" if ss.count != len(ss.quizz_data) - 1 else "Finish"
+            txt = "Next Question →" if ss['count'] != len(ss['quizz_data']) - 1 else "Finish"
             st.button(txt, on_click=next_question)
 
     else:
         st.markdown("## Quiz Completed!")
-        st.markdown(f"### You answered correctly {ss.correct} out of {len(ss.quizz_data)} questions.")
-        if ss.correct/len(ss.quizz_data) > 0.7:
-            st.balloons()
+        st.markdown(f"### You answered correctly {ss['correct']} out of {len(ss['quizz_data'])} questions.")
+        # if ss.correct/len(ss.quizz_data) > 0.7:
+        st.balloons()
 
     # print("---------------------------")
 
@@ -109,7 +115,7 @@ def main():
                                       max_value=20, step=5)
         st.write("")
 
-        lang = st.selectbox("Quizz Langage",
+        lang = st.selectbox("Quizz Language",
                             ["Français", "English"])
 
         st.write("")
@@ -129,7 +135,7 @@ def main():
                     quizz = load_data(chunks, nb_question, lang)
                 if quizz:
                     st.success("Done", icon="✅")
-                    st.session_state.quizz_data = quizz
+                    st.session_state.qz_state['quizz_data'] = quizz
                 else:
                     st.error("Error", icon="🚨")
             else:
@@ -137,11 +143,12 @@ def main():
 
     st.html('<h1 style="text-align: center">AiLA <span style="color: #D42034;">Quizz</span>❓</h1>')
 
-    if 'quizz_data' in st.session_state:
-        launch_quizz()
+    if 'qz_state' in st.session_state:
+        if 'quizz_data' in st.session_state.qz_state:
+            launch_quizz()
 
-    if st.session_state.get('response_error'):
-        st.toast("An error occured, please retry !", icon="🚨")
+        if st.session_state.qz_state.get('response_error'):
+            st.toast("An error occured, please retry !", icon="🚨")
 
 
 load_dotenv()
