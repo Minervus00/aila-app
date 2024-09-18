@@ -17,3 +17,17 @@ with col1:
             font-family:rockwell; margin-left: 2vw'>
             Hi, I'm AiLA !
             </h1>""")
+st.write("")
+st.write("")
+
+st.markdown(
+    """
+    ### I'm here to help you have a better understanding of your documents, lectures or articles.
+    ### By Uploading your files here, you can:
+    - Chat with me about your uploaded documents
+    - Generate a Multiple Choices Quizz
+    - Generate a True-False Quizz
+
+    #### 👈 Select an app from the sidebar
+    """
+)

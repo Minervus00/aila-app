@@ -8,11 +8,7 @@ import random
 
 
 def initialize_state():
-    if 'qz_state' in st.session_state:
-        del st.session_state.qz_state
-    else:
-        st.session_state.qz_state = {}
-
+    st.session_state.qz_state = {}
     st.session_state.qz_state['response_error'] = False
     st.session_state.qz_state['count'] = 0
     st.session_state.qz_state['correct'] = 0

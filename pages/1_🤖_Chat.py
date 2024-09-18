@@ -68,6 +68,7 @@ def clear_chat_history():
         {"role": "assistant",
          "content": "Upload some pdfs and ask me a question"}
     ]
+    st.session_state.input_disabled = True
 
 
 def user_input(user_question):
@@ -92,6 +93,11 @@ def user_input(user_question):
     return response
 
 
+def process(pdf_docs):
+    if pdf_docs:
+        st.session_state.input_disabled = False
+
+
 st.set_page_config(
     page_title="AiLA Chat",
     page_icon="🤖"
@@ -103,13 +109,16 @@ with st.sidebar:
     pdf_docs = st.file_uploader(
         "Upload your PDF Files and Click on the Submit & Process Button",
         accept_multiple_files=True)
-    if st.button("Submit & Process"):
+    if st.button("Submit & Process", on_click=process, args=(pdf_docs,)):
         with st.spinner("Processing..."):
-            for doc in pdf_docs:
-                raw_text = get_pdf_text(doc)
-                text_chunks = get_text_chunks(raw_text)
-                get_vector_store(text_chunks)
-            st.success("Done")
+            if pdf_docs:
+                for doc in pdf_docs:
+                    raw_text = get_pdf_text(doc)
+                    text_chunks = get_text_chunks(raw_text)
+                    get_vector_store(text_chunks)
+                st.success("Done")
+            else:
+                st.warning("No Files Found.")
 
 # Main content area for displaying chat messages
 st.title("Chat with Your PDF Files 🗂️")
@@ -121,13 +130,16 @@ st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 if "messages" not in st.session_state.keys():
     st.session_state.messages = [
         {"role": "assistant",
-            "content": "Upload some PDFs and ask me a question"}]
+         "content": "Upload some PDFs and ask me a question"}]
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-if prompt := st.chat_input():
+if st.session_state.get("input_disabled") is None:
+    st.session_state.input_disabled = True
+
+if prompt := st.chat_input(disabled=st.session_state.input_disabled):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.write(prompt)

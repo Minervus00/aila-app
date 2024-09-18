@@ -8,11 +8,7 @@ import random
 
 
 def initialize_state():
-    if 'tf_state' in st.session_state:
-        del st.session_state.tf_state
-    else:
-        st.session_state.tf_state = {}
-
+    st.session_state.tf_state = {}
     st.session_state.tf_state['response_error'] = False
     st.session_state.tf_state['count'] = 0
     st.session_state.tf_state['correct'] = 0
