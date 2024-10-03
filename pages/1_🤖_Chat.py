@@ -33,7 +33,7 @@ model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", client=genai,
 # split text into chunks
 def get_text_chunks(text):
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000, chunk_overlap=200)
+        chunk_size=500, chunk_overlap=200)
     chunks = splitter.split_text(text)
     return chunks  # list of strings
 
