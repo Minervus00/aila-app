@@ -1,6 +1,4 @@
-import os
 import streamlit as st
-# from PyPDF2 import PdfReader
 import google.generativeai as genai
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -10,24 +8,12 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import PromptTemplate
 from langchain_core.documents import Document
 from utils import get_pdf_text
-from dotenv import load_dotenv
 
 
-load_dotenv()
-os.getenv("GOOGLE_API_KEY")
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
 model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", client=genai,
                                temperature=0.3)
-
-
-# read all pdf files and return text
-# def get_pdf_text(pdf):
-#     text = ""
-#     pdf_reader = PdfReader(pdf)
-#     for page in pdf_reader.pages:
-#         text += page.extract_text()
-#     return text
 
 
 # split text into chunks

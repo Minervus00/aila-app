@@ -1,8 +1,6 @@
 import streamlit as st
-import os
 import json
 import google.generativeai as genai
-from dotenv import load_dotenv
 from utils import get_pdf_text, get_text_chunks
 import random
 
@@ -157,9 +155,7 @@ def main():
             st.toast("An error occured, please retry !", icon="🚨")
 
 
-load_dotenv()
-os.getenv("GOOGLE_API_KEY")
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 gen_config = {
     "temperature": 0.5,
     # "top_p": 0.8,
