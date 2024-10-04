@@ -90,7 +90,7 @@ def launch_quizz():
 
             # st.markdown("## :bulb:\n\n##### " + question["explanation"])
             st.markdown("## :bulb:")
-            st.html(f"<span style='font-size: 1.3vw'>{question['explanation']}</span>")
+            st.html(f"<h4 style='font-weight: normal;'>{question['explanation']}</h4>")
             st.write("")
 
             txt = "Next Question →" if ss['count'] != len(ss['quizz_data']) - 1 else "Finish"
