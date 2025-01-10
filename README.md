@@ -19,6 +19,9 @@ To run the app locally:
 - Create file `.streamlit/secrets.toml`
 - Add the line `GOOGLE_API_KEY = "xxxxx-your-api-key-xxxxx"`
 - `pip install -r requirements.txt`
-- `sudo xargs -a packages.txt apt-get install -y`
+- Install tesseract-ocr and poppler-utils 
+    - Ubuntu: `sudo xargs -a packages.txt apt-get install -y`
+    - Windows : 
+        - poppler : [here](https://github.com/oschwartz10612/poppler-windows/releases/latest)
+        - tesseract: [here](https://github.com/UB-Mannheim/tesseract/wiki)
 - `streamlit run Main.py`
-
