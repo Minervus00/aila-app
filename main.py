@@ -10,13 +10,36 @@ _, col1, _ = st.columns([1, 3, 1])
 st.sidebar.success("Select an app above.")
 
 with col1:
+    st.image("images/citadel_logo.png", use_column_width="auto")
+    st.write("")
     st.image("images/aila-rmbg.png", "AiLA - AI to Learn Actively",
              use_column_width="auto")
 
-    st.html("""<h1 style='font-weight:bold; text-align:center;
-            font-family: Rockwell; margin-left: 2vw'>
-            Hi, I'm AiLA !
-            </h1>""")
+    st.markdown(
+        """
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rockwell&display=swap');
+
+        .rockwell-text {
+            font-family: 'Rockwell', serif;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-left: 2vw;
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown('<h1 class="rockwell-text">Hi, I\'m AiLA!</h1>', unsafe_allow_html=True)
+
+    # st.html("""<h1 style='font-weight:bold; text-align:center;
+    #         font-family: Rockwell; margin-left: 2vw'>
+    #         Hi, I'm AiLA !
+    #         </h1>""")
 
 st.write("")
 st.write("")

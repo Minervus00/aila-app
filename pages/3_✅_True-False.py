@@ -31,10 +31,11 @@ def load_data(chunks: list, n: int, lang="français"):
     prompt = f"""
 {context}
 -----------------
-Proposes moi un questionnaire vrai/faux de {n} questions sur le contenu
-proposé plus haut, en {lang}. Donnes les réponses avec 0 pour faux et 1 pour
-vrai, et une explication de la bonne réponse. Donnes moi juste le quizz
-dans ta réponse et le tout sous format JSON, juste comme suit:
+Tu es un enseignant et tu crées un questionnaire vrai/faux de {n} questions
+sur le contenu proposé plus haut, en {lang}. Donnes les réponses avec 0
+pour faux et 1 pour vrai, et une explication de la bonne réponse. Donnes
+moi juste le quizz dans ta réponse et le tout sous format JSON, sans encadrer
+le tout avec les triples quotes juste comme suit:
 [
     {{
         "question": "...",
@@ -164,7 +165,7 @@ gen_config = {
 }
 
 model = genai.GenerativeModel(
-    model_name='gemini-1.5-flash',
+    model_name='gemini-2.0-flash',
     generation_config=gen_config)
 
 st.set_page_config(

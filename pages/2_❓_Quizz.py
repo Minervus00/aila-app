@@ -31,10 +31,11 @@ def load_data(chunks: list, n: int, lang="français"):
     prompt = f"""
 {context}
 -----------------
-Proposes moi un quizz de {n} questions sur le contenu proposé plus haut.
+Tu es un enseignant et tu crées un quizz de {n} questions sur le contenu proposé plus haut.
 Pour chaque question donnes les propositions et la bonne réponse en {lang}.
-Donnes moi juste le quizz dans ta réponse et le tout sous format JSON, pas
-dans un bloc, juste comme suit:
+Ne commences ni la question, ni l'explication par 'selon le texte'.
+Donnes moi juste le quizz dans ta réponse et le tout sous format JSON, sans mettre
+les triples quotes, juste comme suit:
 [
     {{
         "question": "...",
@@ -163,7 +164,7 @@ gen_config = {
 }
 
 model = genai.GenerativeModel(
-    model_name='gemini-1.5-flash',
+    model_name='gemini-2.0-flash',
     generation_config=gen_config)
 
 st.set_page_config(
