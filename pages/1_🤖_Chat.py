@@ -34,14 +34,26 @@ def get_vector_store(chunks):
 
 def get_conversational_chain():
     prompt_template = (
-        "Always answer in the same language as the question. Answer the "
-        "question with all details in the provided context. Make sure to "
-        "provide all the details. if the answer is not in provided context "
-        "just say, in the same language as the question, that the answer "
-        "is not available in the context, don't provide the wrong answer.\n\n"
-        "Context:\n {context}\n"
-        "Question: \n{question}\n"
+        "Réponds toujours dans la même langue que la question. Réponds à la "
+        "question avec tous les détails dans le contexte fourni. Assures-toi "
+        "de fournir tous les détails. "
+        "Si la réponse n'est pas dans le contexte fourni donnes la réponse "
+        "selon ce que tu sais mais précises que cette réponse vient de toi "
+        "et ne figurait pas dans le contexte dans ce format :\n\n"
+        "La réponse n'est pas fournie dans le contexte mais voici ce que je "
+        "sais:\n...\n\n"
+        "Contexte :\n {context}\n"
+        "Question :\n {question}\n"
     )
+    # prompt_template = (
+    #     "Always answer in the same language as the question. Answer the "
+    #     "question with all details in the provided context. Make sure to "
+    #     "provide all the details. if the answer is not in provided context "
+    #     "just say, in the same language as the question, that the answer "
+    #     "is not available in the context, don't provide the wrong answer.\n\n"
+    #     "Context:\n {context}\n"
+    #     "Question: \n{question}\n"
+    # )
 
     prompt = PromptTemplate(template=prompt_template,
                             input_variables=["context", "question"])

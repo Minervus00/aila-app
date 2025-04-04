@@ -102,7 +102,7 @@ def launch_quizz():
         st.markdown("## Quiz Completed!")
         st.markdown(f"### You answered correctly {ss['correct']} out of {len(ss['quizz_data'])} questions.")
         # if ss.correct/len(ss.quizz_data) > 0.7:
-        st.balloons()
+        # st.balloons()
 
     # print("---------------------------")
 
