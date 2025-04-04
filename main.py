@@ -10,10 +10,9 @@ _, col1, _ = st.columns([1, 3, 1])
 st.sidebar.success("Select an app above.")
 
 with col1:
-    st.image("images/citadel_logo.png", use_column_width="auto")
+    st.image("images/citadel_logo.png")
     st.write("")
-    st.image("images/aila-rmbg.png", "AiLA - AI to Learn Actively",
-             use_column_width="auto")
+    st.image("images/aila-rmbg.png", "AiLA - AI to Learn Actively")
 
     st.markdown(
         """
