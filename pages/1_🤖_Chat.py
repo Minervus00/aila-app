@@ -8,6 +8,8 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import PromptTemplate
 from langchain_core.documents import Document
 from utils import get_pdf_text
+import shutil
+from pathlib import Path
 
 
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
@@ -61,14 +63,6 @@ def get_conversational_chain():
     return chain
 
 
-def clear_chat_history():
-    st.session_state.messages = [
-        {"role": "assistant",
-         "content": "Upload some pdfs and ask me a question"}
-    ]
-    st.session_state.input_disabled = True
-
-
 def user_input(user_question):
     embeddings = GoogleGenerativeAIEmbeddings(
         model="models/embedding-001")  # type: ignore
@@ -91,8 +85,29 @@ def user_input(user_question):
     return response
 
 
+def clear_chat_history():
+    st.session_state.messages = [
+        {"role": "assistant",
+         "content": "Upload some pdfs and ask me a question"}
+    ]
+    st.session_state.input_disabled = True
+
+    clear_vectostore()
+
+
+def clear_vectostore():
+    folder_path = Path("faiss_index")
+    if folder_path.exists():
+        shutil.rmtree(folder_path)
+        print(f"Folder '{folder_path}' deleted successfully.")
+    else:
+        print("The folder does not exist.")
+
+
 def process(pdf_docs):
     if pdf_docs:
+        clear_vectostore()
+
         st.session_state.input_disabled = False
 
 
