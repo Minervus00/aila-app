@@ -3,6 +3,39 @@ import json
 import google.generativeai as genai
 from utils import get_pdf_text, get_text_chunks
 import random
+from fpdf import FPDF
+
+
+def create_quiz_pdf(quiz_data):
+    """Create a PDF file from quiz data"""
+    pdf = FPDF()
+    pdf.add_page()
+
+    # Add title
+    pdf.set_font("Arial", "B", 16)
+    pdf.cell(0, 10, "Quiz Questions", ln=True, align="C")
+    pdf.ln(10)
+
+    # Add questions
+    pdf.set_font("Arial", "B", 12)
+    for i, item in enumerate(quiz_data):
+        # Question
+        pdf.set_font("Arial", "B", 12)
+        pdf.multi_cell(0, 10, f"Question {i+1}: {item['question']}")
+
+        # Options
+        pdf.set_font("Arial", "", 12)
+        for j, option in enumerate(item["options"]):
+            correct = "[x] " if j == item["answer"] else "     "
+            # correct = "✓ " if j == item["answer"] else "  "
+            pdf.multi_cell(0, 10, f"{correct}Option {j+1}: {option}")
+
+        # Explanation
+        pdf.set_font("Arial", "I", 12)
+        pdf.multi_cell(0, 10, f"Explanation: {item['explanation']}")
+        pdf.ln(5)
+
+    return pdf.output(dest="S").encode("latin-1")
 
 
 def initialize_state():
@@ -140,6 +173,9 @@ def main():
                 if quizz:
                     st.success("Done", icon="✅")
                     st.session_state.qz_state['quizz_data'] = quizz
+                    pdf_bytes = create_quiz_pdf(quizz)
+                    st.session_state.qz_state['pdf_bytes'] = pdf_bytes
+
                 else:
                     st.error("Error", icon="🚨")
             else:
@@ -150,6 +186,14 @@ def main():
     if 'qz_state' in st.session_state:
         if 'quizz_data' in st.session_state.qz_state:
             launch_quizz()
+            with st.sidebar:
+                st.download_button(
+                    label="⬇️Download Quiz",
+                    data=st.session_state.qz_state['pdf_bytes'],
+                    file_name="quiz.pdf",
+                    mime="application/pdf",
+                    help="Download the quiz as a PDF file",
+                )
 
         if st.session_state.qz_state.get('response_error'):
             st.toast("An error occured, please retry !", icon="🚨")
