@@ -39,7 +39,7 @@ def create_quiz_pdf(quiz_data):
         pdf.multi_cell(0, 10, f"Explanation: {item['explanation']}")
         pdf.ln(5)
 
-    return pdf.output(dest="S").encode("latin-1")
+    return pdf.output(dest="S").encode("latin1")
 
 
 def initialize_state():
