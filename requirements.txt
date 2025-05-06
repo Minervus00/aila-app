@@ -9,4 +9,4 @@ pytesseract
 pdf2image
 pillow
 faiss-cpu
-fpdf
+reportlab
