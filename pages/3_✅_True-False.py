@@ -116,10 +116,11 @@ def load_data(chunks: list, n: int, lang="français"):
 {context}
 -----------------
 Tu es un enseignant et tu crées un questionnaire vrai/faux de {n} questions
-sur le contenu proposé plus haut, en {lang}. Donnes les réponses avec 0
-pour faux et 1 pour vrai, et une explication de la bonne réponse. Donnes
+sur le contenu proposé plus haut. Les questions et les options doivent
+être en {lang}. Le champ "answer" a pour valeur 0 si faux est la bonne réponse
+et 1 si la réponse est vrai. Donnes une explication de la bonne réponse. Donnes
 moi juste le quizz dans ta réponse et le tout sous format JSON, sans encadrer
-le tout avec les triples quotes juste comme suit:
+le tout avec les triples quotes, juste comme suit:
 [
     {{
         "question": "...",
@@ -249,7 +250,7 @@ def main():
             launch_quizz()
             with st.sidebar:
                 st.download_button(
-                    label="⬇Download Quiz",
+                    label="Download Quiz",
                     data=st.session_state.tf_state["pdf_bytes"],
                     file_name="quiz.pdf",
                     mime="application/pdf",
